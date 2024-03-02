@@ -39,10 +39,10 @@ public class PlayerObj : MonoBehaviour
 
     void Start()
     {
-        sprites[0] = Resources.Load<Sprite>("Rooms/Script/Player/Sprites/walk_back");
-        sprites[1] = Resources.Load<Sprite>("Rooms/Script/Player/Sprites/walk_left");
-        sprites[2] = Resources.Load<Sprite>("Rooms/Script/Player/Sprites/walk_front");
-        sprites[3] = Resources.Load<Sprite>("Rooms/Script/Player/Sprites/walk_right");
+        sprites[0] = Resources.Load<Sprite>("Player/walk_back");
+        sprites[1] = Resources.Load<Sprite>("Player/walk_left");
+        sprites[2] = Resources.Load<Sprite>("Player/walk_front");
+        sprites[3] = Resources.Load<Sprite>("Player/walk_right");
 
         RoomObjDoor.doorOpened += doorToOtherRoom;
         Map.generationCompleted += enablePlayer;

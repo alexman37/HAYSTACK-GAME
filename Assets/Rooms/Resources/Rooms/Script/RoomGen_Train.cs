@@ -17,7 +17,7 @@ public static class RoomGen_Train
     //Acquire all tiles from the train tilemap
     static private void getAllTiles()
     {
-        DirectoryInfo d = new DirectoryInfo("Assets/Resources/Rooms/Tiles/Palettes/Train/Tiles");
+        DirectoryInfo d = new DirectoryInfo("Assets/Rooms/Resources/Rooms/Tiles/Palettes/Train/Tiles");
         FileInfo[] info = d.GetFiles();
 
         allTiles = new TileBase[info.Length];
