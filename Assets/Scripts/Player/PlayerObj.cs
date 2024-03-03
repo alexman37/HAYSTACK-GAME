@@ -52,6 +52,7 @@ public class PlayerObj : MonoBehaviour
     //TODO: needs to be more refined. complete enabling / disabling?
     void enablePlayer()
     {
+        //GetComponent<SpriteRenderer>().sprite.
         transform.position = new Vector3(0, 0, transform.position.z);
         switchRoom(RoomGen.map.rooms[0]);
     }

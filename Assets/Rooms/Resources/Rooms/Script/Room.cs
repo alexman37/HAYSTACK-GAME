@@ -107,10 +107,20 @@ public class Room
         return "ROOM # " + id + " - " + roomName;
     }
 
+    //used when randomly choosing locations for room objects
     public Vector2Int getRandomPosition()
     {
         BoundBox box = boundaries[indexInBPC(Random.Range(0, roomSize))];
-        return box.getRandomPosition();
+        Vector2Int vec;
+        int attempts = 0;
+        do
+        {
+            vec = box.getRandomPosition();
+            attempts++;
+        } while (attempts < 16 && locationsWithAnObject.Contains(vec));
+
+        if (attempts >= 16) Debug.LogError("Too many attempts for picking a random location. TODO: Handle this.");
+        return vec;
     }
 
     private int indexInBPC(int num)

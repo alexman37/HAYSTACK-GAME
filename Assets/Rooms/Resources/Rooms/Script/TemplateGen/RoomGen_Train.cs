@@ -72,7 +72,7 @@ public static class RoomGen_Train
             {
                 rooms[i].adjacentRooms.Add(rooms[i + 1]);
                 //TODO: DOORS
-                RoomObjDoor d = new RoomObjDoor(doorLocs[i], allTiles[10], (rooms[i], rooms[i+1]), (new Vector2Int(-i * 13, 2), new Vector2Int(-i * 13, 2)));
+                RoomObjDoor d = new RoomObjDoor(doorLocs[i], allTiles[10], (rooms[i], rooms[i+1]), (new Vector2Int(-i * 13 - 1, 2), new Vector2Int(-i * 13 - 1, 2)));
                 rooms[i].objects.Add(d);
                 rooms[i+1].objects.Add(d);
             }
