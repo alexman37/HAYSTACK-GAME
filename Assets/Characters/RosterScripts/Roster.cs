@@ -33,7 +33,6 @@ public class Roster
 
             roster[i].randomizeDemographics();
 
-            Debug.Log("roster gen " + roster[i]);
             rosterSprites.Add(CharSpriteGen.genSpriteFromLayers(roster[i]));
         }
     }

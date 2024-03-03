@@ -16,8 +16,8 @@ public class PlayerObj : MonoBehaviour
     Room currentRoom;
 
     //movement mechanics
-    float xPos = 0.5f;
-    float yPos = 0.5f;
+    int xPos = 0;
+    int yPos = 0;
     bool moving;
     bool movingInProgress = false;
     bool movingPlanSet = false;
@@ -52,7 +52,7 @@ public class PlayerObj : MonoBehaviour
     //TODO: needs to be more refined. complete enabling / disabling?
     void enablePlayer()
     {
-        transform.position = new Vector3(0.5f, 0.5f, transform.position.z);
+        transform.position = new Vector3(0, 0, transform.position.z);
         switchRoom(RoomGen.map.rooms[0]);
     }
 
@@ -83,8 +83,8 @@ public class PlayerObj : MonoBehaviour
             {
                 movingInProgress = false;
 
-                xPos = transform.position.x;
-                yPos = transform.position.y;
+                xPos = Mathf.FloorToInt(transform.position.x);
+                yPos = Mathf.FloorToInt(transform.position.y);
 
                 transform.position = neww;
                 movingPlanSet = false;
@@ -148,7 +148,7 @@ public class PlayerObj : MonoBehaviour
                 //change facing direction of sprite
                 resetFacingSprite(facing);
                 //Last check: Are you allowed to move here?
-                if (currentRoom.canMoveHere(new Vector2(xPos + xMovement, yPos + yMovement)))
+                if (currentRoom.canMoveHere(new Vector2Int(xPos + xMovement, yPos + yMovement)))
                 {
                     movingInProgress = true;
                     moving = false;
@@ -162,10 +162,11 @@ public class PlayerObj : MonoBehaviour
                     if (obj != null)
                     {
                         obj.interact();
-                        if (obj is RoomObjDoor door) { 
-                            transform.position = door.openDoor(currentRoom);
-                            xPos = transform.position.x;
-                            yPos = transform.position.y;
+                        if (obj is RoomObjDoor door) {
+                            Vector2Int newPos = door.openDoor(currentRoom);
+                            transform.position = new Vector3(newPos.x, newPos.y, 0);
+                            xPos = Mathf.FloorToInt(transform.position.x);
+                            yPos = Mathf.FloorToInt(transform.position.y);
                         }
                     }
                 }

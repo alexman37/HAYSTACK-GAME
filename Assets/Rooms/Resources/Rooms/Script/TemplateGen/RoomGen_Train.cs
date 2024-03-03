@@ -41,13 +41,15 @@ public static class RoomGen_Train
         //STEP B: Set room properties.
         Room newRoom = new Room(id, "Train Car", 0, new List<Room>(), boundBoxes, trainFloorTile);
 
+        //STEP C: Add objects to room.
+
         return newRoom;
 
         //draw the room in RoomGen
         //assign doors at the end of generate()
     }
 
-    public static List<Room> generate(int numCars)
+    public static List<Room> generate(int numCars, Roster rost)
     {
         getAllTiles();
 
@@ -70,14 +72,34 @@ public static class RoomGen_Train
             {
                 rooms[i].adjacentRooms.Add(rooms[i + 1]);
                 //TODO: DOORS
-                RoomObjDoor d = new RoomObjDoor(doorLocs[i], allTiles[10], (rooms[i], rooms[i+1]), (new Vector2(-i * 13 + 0.5f, 2.5f), new Vector2(-i * 13 - 1.5f, 2.5f)));
+                RoomObjDoor d = new RoomObjDoor(doorLocs[i], allTiles[10], (rooms[i], rooms[i+1]), (new Vector2Int(-i * 13, 2), new Vector2Int(-i * 13, 2)));
                 rooms[i].objects.Add(d);
                 rooms[i+1].objects.Add(d);
             }
         }
 
+        //randomly assign objects
+        rooms = randomlyAssignObjects(rooms, rost);
+
         GameObject g = GameObject.Instantiate(RoomGen.defaultSpr, Vector3.zero, Quaternion.identity);
         g.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Rooms/Objects/test_crate");
+
+        return rooms;
+    }
+
+
+
+
+
+    private static List<Room> randomlyAssignObjects(List<Room> rooms, Roster rost)
+    {
+        Sprite pawn = Resources.Load<Sprite>("Rooms/Objects/pawn_ex_1");
+
+        foreach(Character ch in rost.roster)
+        {
+            int roomIx = Random.Range(0, rooms.Count);
+            rooms[roomIx].addObject(new RoomObjCharacter(ch, pawn, rooms[roomIx].getRandomPosition()));
+        }
 
         return rooms;
     }

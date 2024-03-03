@@ -14,13 +14,6 @@ public class RosterGen : MonoBehaviour
     void Start()
     {
         roster = new Roster(100);
-        roster.DebugLogRoster();
         rosterCreationDone.Invoke(roster);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

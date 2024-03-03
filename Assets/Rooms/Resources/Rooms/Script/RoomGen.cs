@@ -15,8 +15,13 @@ public class RoomGen : MonoBehaviour
         defaultSpr = GameObject.FindGameObjectWithTag("DefaultSpr");
         tilemap = GameObject.FindGameObjectWithTag("TilemapSt").GetComponent<Tilemap>();
 
+        RosterGen.rosterCreationDone += initMap;
+    }
+
+    void initMap(Roster r)
+    {
         map = new Map();
-        map.initializeMap();
+        map.initializeMap(r);
     }
 
     // Update is called once per frame
