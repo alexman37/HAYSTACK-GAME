@@ -21,6 +21,9 @@ public class Character
     CPD_Glasses glasses;
     CPD_EyeColor eyeColor;
 
+    //Role - dependent on the template chosen.
+    public Role role;
+
     //Attributes
     string firstName;
     string lastName;

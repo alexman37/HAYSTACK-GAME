@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class RosterGen : MonoBehaviour
+/*public class RosterGen : MonoBehaviour
 {
     public int numberOfCharacters;
     Roster roster;
 
-    public static event Action<Roster> rosterCreationDone;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -17,3 +17,4 @@ public class RosterGen : MonoBehaviour
         rosterCreationDone.Invoke(roster);
     }
 }
+*/

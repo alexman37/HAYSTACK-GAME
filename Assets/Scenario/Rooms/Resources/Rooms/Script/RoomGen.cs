@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System;
 
 public class RoomGen : MonoBehaviour
 {
@@ -9,18 +10,23 @@ public class RoomGen : MonoBehaviour
     public static Map map;
     public static GameObject defaultSpr;
 
+
+    public static event Action roomGenReady;
+
     // Start is called before the first frame update
     void Start()
     {
         defaultSpr = GameObject.FindGameObjectWithTag("DefaultSpr");
         tilemap = GameObject.FindGameObjectWithTag("TilemapSt").GetComponent<Tilemap>();
 
-        RosterGen.rosterCreationDone += initMap;
+        Scenario.rosterCreationDone += initMap;
+        roomGenReady.Invoke();
     }
 
     void initMap(Roster r)
     {
-        map = new Map();
+        Debug.Log("init map");
+        map = new Map(AllTemplates.templateList[0]);
         map.initializeMap(r);
     }
 

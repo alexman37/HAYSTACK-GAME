@@ -7,9 +7,14 @@ public class Map {
     public List<Room> rooms;
     public static event Action generationCompleted;
     private Roster roster;
+    public Template template;
+    
 
+    public Map(Template t)
+    {
+        this.template = t;
+    }
 
-    //TODO: Generate using a template
     public void initializeMap(Roster rost)
     {
         roster = rost;
@@ -24,4 +29,5 @@ public class Map {
         generationCompleted.Invoke();
         //When map generation done, notify the player
     }
+
 }

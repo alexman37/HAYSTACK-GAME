@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class UI_Roster : MonoBehaviour
 {
@@ -14,11 +15,14 @@ public class UI_Roster : MonoBehaviour
 
     private GameObject container;
 
+    public static event Action rosterUIReady;
+
     void Start()
     {
         createContainer();
         rosterWindow.gameObject.SetActive(false);
-        RosterGen.rosterCreationDone += setRoster;
+        Scenario.rosterCreationDone += setRoster;
+        rosterUIReady.Invoke();
     }
 
     void createContainer()
@@ -30,6 +34,7 @@ public class UI_Roster : MonoBehaviour
 
     void setRoster(Roster rost)
     {
+        Debug.Log("set roster");
         roster = rost;
     }
 

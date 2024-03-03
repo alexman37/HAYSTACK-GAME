@@ -8,12 +8,12 @@ public class Roster
     public List<Character> roster;
     public List<Sprite> rosterSprites; //consistent list of the portrait per each character
 
-    public Roster(int numChars)
+    public Roster(int numChars, Template temp)
     {
-        createRoster(numChars);
+        createRoster(numChars, temp);
     }
 
-    public void createRoster(int numChars)
+    public void createRoster(int numChars, Template temp)
     {
         if (roster != null)
         {
