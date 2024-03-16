@@ -29,7 +29,8 @@ public class Scenario : MonoBehaviour
 
         //Subscriptions
         RoomGen.roomGenReady += ReadyRoomGen;
-        UI_Roster.rosterUIReady += ReadyRosterUI;
+
+        this.gameObject.AddComponent<RoomGen>();
     }
 
     //Call this only when all other necessary objects (RoomGen, RosterUI, etc.) are finished creation
@@ -37,7 +38,7 @@ public class Scenario : MonoBehaviour
     {
         //1. Generate a roster
         rost = new Roster(100, AllTemplates.templateList[0]);
-        Debug.Log(rosterCreationDone);
+        rost.DebugLogRoster();
         rosterCreationDone.Invoke(rost);
 
         //2. Generate the map
@@ -58,14 +59,8 @@ public class Scenario : MonoBehaviour
         if (allSystemsReady()) createNewScenario();
     }
 
-    void ReadyRosterUI()
-    {
-        rosterUIReady = true;
-        if (allSystemsReady()) createNewScenario();
-    }
-
     bool allSystemsReady()
     {
-        return rosterUIReady && roomGenReady;
+        return roomGenReady;
     }
 }

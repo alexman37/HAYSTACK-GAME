@@ -16,6 +16,7 @@ public class RoomGen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        roomGenReady += dummyMethod;
         defaultSpr = GameObject.FindGameObjectWithTag("DefaultSpr");
         tilemap = GameObject.FindGameObjectWithTag("TilemapSt").GetComponent<Tilemap>();
 
@@ -30,9 +31,5 @@ public class RoomGen : MonoBehaviour
         map.initializeMap(r);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    void dummyMethod() { }
 }

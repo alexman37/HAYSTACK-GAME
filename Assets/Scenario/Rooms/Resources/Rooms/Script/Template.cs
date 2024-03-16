@@ -6,6 +6,9 @@ public class Template
 {
 
     public string name;
+
+    //TODO: MAP FIELDS???
+
     public List<Role> rolePool;
 
     //Tuple represents min and max amount fo people who can have this role
@@ -20,15 +23,12 @@ public class Template
         rolePool = new List<Role>();
         roleAmounts = new Dictionary<Role, (ConstantOrProbability min, ConstantOrProbability max)>();
 
-        int saveTheIndex = -1;
         for(int i = 0; i < roles.Length; i++)
         {
             (Role role, ConstantOrProbability min, ConstantOrProbability max) r = roles[i];
             rolePool.Add(r.role);
             if(r.min.rest)
             {
-                if (saveTheIndex != -1) Debug.LogError("Can't set two roles to have 'rest of' probability.");
-                saveTheIndex = i;
                 roleAmounts.Add(r.role, (r.min, r.max));
             }
             else roleAmounts.Add(r.role, (r.min, r.max));
@@ -54,7 +54,7 @@ public class Template
 
 public class ConstantOrProbability
 {
-    public int value = 0;
+    public int value = -1;
     public float probability = -1;
     public bool rest = false;
 

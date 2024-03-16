@@ -19,7 +19,7 @@ public class UI_Roster : MonoBehaviour
 
     void Start()
     {
-        createContainer();
+        rosterUIReady += createContainer;
         rosterWindow.gameObject.SetActive(false);
         Scenario.rosterCreationDone += setRoster;
         rosterUIReady.Invoke();

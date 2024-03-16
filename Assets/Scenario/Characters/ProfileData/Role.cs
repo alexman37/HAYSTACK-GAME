@@ -24,4 +24,9 @@ public class Role
     {
         
     }
+
+    public override string ToString()
+    {
+        return name;
+    }
 }

@@ -37,7 +37,7 @@ public class Character
     int[] enemies; //Murderer fairly likely to kill enemies
 
     //Traits
-    //List<Trait> traits = new List<Trait>();
+    HashSet<string> traits;
 
     //Randomize everything!
     public Character(int id)
@@ -61,12 +61,20 @@ public class Character
         (string f, string l) fullName = CharRandomValue.randomName(isMale);
         firstName = fullName.f;
         lastName = fullName.l;
+
+        //traits
+        traits = CharacterTrait.getRandomTraits(5);
     }
 
     public string getDisplayName(bool newline)
     {
         if (newline == false) return firstName + " " + lastName;
         else return firstName + "\n" + lastName;
+    }
+
+    public bool hasTrait(string name)
+    {
+        return traits.Contains(name);
     }
 
     public override string ToString()
@@ -78,7 +86,9 @@ public class Character
             "Wt: " + weight + "\n" +
             "Male: " + isMale + "\n" +
             "SkinTone: " + skinTone + "\n" +
-            "Hair: " + hairStyle + "," + hairColor + "\n";
+            "Hair: " + hairStyle + "," + hairColor + "\n" +
+            "Role: " + role + "\n" +
+            "NumTraits: " + traits.Count + "\n";
         return str;
     }
 }
