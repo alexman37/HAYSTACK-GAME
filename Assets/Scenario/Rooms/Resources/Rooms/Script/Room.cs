@@ -13,7 +13,7 @@ public class Room
     public string roomName;
     public int roomType; //the types vary based on which template it's a part of
     public List<Room> adjacentRooms;
-    public List<BoundBox> boundaries;
+    public List<RoomBoundBox> boundaries;
 
     //used in "get random position in the room" calculations.
     private List<int> boundaryProbCutoffs = new List<int>();
@@ -22,24 +22,41 @@ public class Room
     public List<RoomObject> objects = new List<RoomObject>();
     private HashSet<Vector2Int> locationsWithAnObject = new HashSet<Vector2Int>();
 
-    public Room(int id, string n, int t, List<Room> adj, List<BoundBox> boundBoxes, int floorTile)
+    //Used in camera logic.
+    public Vector3 focalPoint;
+
+    public Room(int id, string n, int t, List<Room> adj, List<RoomBoundBox> RoomBoundBoxes, int floorTile)
     {
         this.id = id;
         this.roomName = n;
         this.roomType = t;
         this.adjacentRooms = adj;
-        this.boundaries = boundBoxes;
+        this.boundaries = RoomBoundBoxes;
 
-        foreach(BoundBox bb in boundaries)
+        Vector2 minBounds = boundaries[0].bottomLeft;
+        Vector2 maxBounds = boundaries[0].topRight;
+
+        foreach(RoomBoundBox bb in boundaries)
         {
             boundaryProbCutoffs.Add(roomSize + bb.size);
             roomSize += bb.size;
+
+            if (bb.bottomLeft.x < minBounds.x) minBounds.x = bb.bottomLeft.x;
+            if (bb.bottomLeft.y < minBounds.y) minBounds.y = bb.bottomLeft.y;
+            if (bb.topRight.x > maxBounds.x) maxBounds.x = bb.bottomLeft.x;
+            if (bb.topRight.y > maxBounds.y) maxBounds.y = bb.bottomLeft.y;
         }
+
+        focalPoint = new Vector3(
+            minBounds.x + ((maxBounds.x - minBounds.x) / 2),
+            minBounds.y + ((maxBounds.y - minBounds.y) / 2),
+            0 //TODO: Figure out a way to zoom out to the right amount
+        );
     }
 
     public void draw()
     {
-        foreach(BoundBox bb in boundaries)
+        foreach(RoomBoundBox bb in boundaries)
         {
             for(int x = bb.bottomLeft.x; x < bb.topRight.x; x++)
             {
@@ -68,7 +85,7 @@ public class Room
     //Is this an open tile in the room?
     public bool canMoveHere(Vector2Int dest)
     {
-        foreach(BoundBox bb in boundaries)
+        foreach(RoomBoundBox bb in boundaries)
         {
             if (bb.walkable && bb.contains(dest))
             {
@@ -102,6 +119,19 @@ public class Room
         return null;
     }
 
+    public RoomObject isObjectHereExact(Vector2 dest)
+    {
+        foreach (RoomObject obj in objects)
+        {
+            if(obj.bbox.contains(dest))
+            {
+                return obj;
+            }
+        }
+
+        return null;
+    }
+
     public override string ToString()
     {
         return "ROOM # " + id + " - " + roomName;
@@ -110,7 +140,7 @@ public class Room
     //used when randomly choosing locations for room objects
     public Vector2Int getRandomPosition()
     {
-        BoundBox box = boundaries[indexInBPC(Random.Range(0, roomSize))];
+        RoomBoundBox box = boundaries[indexInBPC(Random.Range(0, roomSize))];
         Vector2Int vec;
         int attempts = 0;
         do
@@ -135,16 +165,64 @@ public class Room
 }
 
 
-//This defines one of the boundaries of the room. All rooms can be defined by a list of rectangular boundaries
+public class PinpointBoundBox
+{
+    public Vector2 bottomLeft;
+    public Vector2 topRight;
+    public float size;
+
+    public PinpointBoundBox(Vector2 bl, Vector2 tr)
+    {
+        bottomLeft = bl;
+        topRight = tr;
+
+        size = (tr.x - bl.x) * (tr.y - bl.y);
+    }
+
+    public override string ToString()
+    {
+        return "[" + bottomLeft + " -- " + topRight + "]";
+    }
+
+    public bool contains(Vector2 dest)
+    {
+        return dest.x >= bottomLeft.x && dest.x < topRight.x && dest.y >= bottomLeft.y && dest.y < topRight.y;
+    }
+}
+
 public class BoundBox
 {
     public Vector2Int bottomLeft;
     public Vector2Int topRight;
     public int size;
+
+    public BoundBox(Vector2Int bl, Vector2Int tr)
+    {
+        bottomLeft = bl;
+        topRight = tr;
+
+        size = (tr.x - bl.x) * (tr.y - bl.y);
+    }
+
+    public override string ToString()
+    {
+        return "[" + bottomLeft + " -- " + topRight + "]";
+    }
+
+    public bool contains(Vector2Int dest)
+    {
+        return dest.x >= bottomLeft.x && dest.x < topRight.x && dest.y >= bottomLeft.y && dest.y < topRight.y;
+    }
+}
+
+
+//This defines one of the boundaries of the room. All rooms can be defined by a list of rectangular boundaries
+public class RoomBoundBox : BoundBox
+{
     public bool walkable = true;
     public TileBase tile;
 
-    public BoundBox(Vector2Int bl, Vector2Int tr, TileBase t)
+    public RoomBoundBox(Vector2Int bl, Vector2Int tr, TileBase t) : base(bl, tr)
     {
         bottomLeft = bl;
         topRight = tr;
@@ -156,15 +234,5 @@ public class BoundBox
     public Vector2Int getRandomPosition()
     {
         return new Vector2Int(Random.Range(bottomLeft.x, topRight.x), Random.Range(bottomLeft.y, topRight.y));
-    }
-
-    public override string ToString()
-    {
-        return "[" + bottomLeft + " -- " + topRight + "]";
-    }
-
-    public bool contains(Vector2Int dest)
-    {
-        return dest.x >= bottomLeft.x && dest.x < topRight.x && dest.y >= bottomLeft.y && dest.y < topRight.y;
     }
 }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - TilemapSt
   - DefaultSpr
+  - descBox
   layers:
   - Default
   - TransparentFX

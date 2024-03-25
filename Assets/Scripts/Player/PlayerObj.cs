@@ -45,7 +45,7 @@ public class PlayerObj : MonoBehaviour
         sprites[3] = Resources.Load<Sprite>("Player/walk_right");
 
         RoomObjDoor.doorOpened += doorToOtherRoom;
-        Map.generationCompleted += enablePlayer;
+        //.generationCompleted += enablePlayer;
     }
 
     //when the map is finished generation, we can start using the player object
@@ -164,8 +164,8 @@ public class PlayerObj : MonoBehaviour
                     {
                         obj.interact();
                         if (obj is RoomObjDoor door) {
-                            Vector2Int newPos = door.openDoor(currentRoom);
-                            transform.position = new Vector3(newPos.x, newPos.y, 0);
+                            //Vector2Int newPos = door.openDoor(currentRoom);
+                            //transform.position = new Vector3(newPos.x, newPos.y, 0);
                             xPos = Mathf.FloorToInt(transform.position.x);
                             yPos = Mathf.FloorToInt(transform.position.y);
                         }
