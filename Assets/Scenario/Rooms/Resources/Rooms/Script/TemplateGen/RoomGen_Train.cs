@@ -12,21 +12,7 @@ using System.IO;
 public static class RoomGen_Train
 {
     static int trainFloorTile = 0;
-    static TileBase[] allTiles;
-
-    //Acquire all tiles from the train tilemap
-    static private void getAllTiles()
-    {
-        DirectoryInfo d = new DirectoryInfo("Assets/Scenario/Rooms/Resources/Rooms/Tiles/Palettes/Train/Tiles");
-        FileInfo[] info = d.GetFiles();
-
-        allTiles = new TileBase[info.Length];
-
-        for (int i = 0; i < info.Length; i++)
-        {
-            allTiles[i] = Resources.Load<TileBase>("Rooms/Tiles/Palettes/Train/Tiles/tileMap_" + i);
-        }
-    }
+    static Template trainTemp = AllTemplates.templateList[0];
 
     //generate a single train car
     public static Room generateCar(int id, Vector2Int bottomLeft, int width, int height)
@@ -34,7 +20,7 @@ public static class RoomGen_Train
         //STEP A: set up bounding boxes.
         bottomLeft = new Vector2Int(bottomLeft.x, bottomLeft.y);
         Vector2Int topRight = new Vector2Int(bottomLeft.x + width, bottomLeft.y + height);
-        RoomBoundBox b = new RoomBoundBox(bottomLeft, topRight, allTiles[0]);
+        RoomBoundBox b = new RoomBoundBox(bottomLeft, topRight, 0);
         List<RoomBoundBox> RoomBoundBoxes = new List<RoomBoundBox>();
         RoomBoundBoxes.Add(b);
 
@@ -51,8 +37,6 @@ public static class RoomGen_Train
 
     public static List<Room> generate(int numCars, Roster rost)
     {
-        getAllTiles();
-
         List<Room> rooms = new List<Room>();
 
         //Keep track of where doors will go.
@@ -70,18 +54,18 @@ public static class RoomGen_Train
             if (i > 0)
             {
                 //ADD DOOR - RIGHT ROOM
-                //TODO: UNCOMMENT WHEN WE HAVE A "DRAW WHEN RELEVANT" system
-                //rooms[i].adjacentRooms.Add(rooms[i - 1]);
-                //PinpointBoundBox bb = new PinpointBoundBox(new Vector2((-i + 1) * 13 - 1 - 0.5f, 1.5f), new Vector2(-i * 13 - 1 + 0.5f, 2.5f));
-                //RoomObjDoor d = new RoomObjDoor(new Vector2Int((-i + 1) * 13 - 1, 2), allTiles[10], rooms[i - 1], bb);
-                //rooms[i].objects.Add(d);
+                rooms[i].adjacentRooms.Add(rooms[i - 1]);
+                PinpointBoundBox bb = new PinpointBoundBox(new Vector2((-i + 1) * 13 - 1 - 0.5f, 1.5f), new Vector2((-i + 1) * 13 - 1 + 0.5f, 2.5f));
+                RoomObjDoor d = new RoomObjDoor(new Vector2Int((-i + 1) * 13 - 1, 2), 10, rooms[i - 1], bb);
+                Debug.Log("Right door - " + d.bbox);
+                rooms[i].objects.Add(d);
             }
             if (i < numCars - 1)
             {
                 //ADD DOOR - LEFT ROOM
                 rooms[i].adjacentRooms.Add(rooms[i + 1]);
                 PinpointBoundBox bb = new PinpointBoundBox(new Vector2(-i * 13 - 1 - 0.5f, 1.5f), new Vector2(-i * 13 - 1 + 0.5f, 2.5f));
-                RoomObjDoor d = new RoomObjDoor(new Vector2Int(-i * 13 - 1, 2), allTiles[10], rooms[i + 1], bb);
+                RoomObjDoor d = new RoomObjDoor(new Vector2Int(-i * 13 - 1, 2), 10, rooms[i + 1], bb);
                 rooms[i].objects.Add(d);
             }
         }

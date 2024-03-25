@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
+using System.IO;
 
 public class Template
 {
@@ -8,6 +10,8 @@ public class Template
     public string name;
 
     //TODO: MAP FIELDS???
+    public TileBase[] allTiles;
+    public TileBase[] allTilesM;
 
     public List<Role> rolePool;
 
@@ -33,6 +37,26 @@ public class Template
             }
             else roleAmounts.Add(r.role, (r.min, r.max));
         }
+
+        getAllTiles(name);
+    }
+
+    //Acquire all tiles from a tilemap
+    private void getAllTiles(string templateName)
+    {
+        DirectoryInfo d = new DirectoryInfo("Assets/Scenario/Rooms/Resources/Rooms/Tiles/Palettes/Train/Tiles");
+        FileInfo[] info = d.GetFiles();
+
+        allTiles = new TileBase[info.Length];
+        allTilesM = new TileBase[info.Length];
+
+        for (int i = 0; i < info.Length; i++)
+        {
+            allTiles[i] = Resources.Load<TileBase>("Rooms/Tiles/Palettes/" + templateName + "/Tiles/tileMap_" + i);
+            allTilesM[i] = Resources.Load<TileBase>("Rooms/Tiles/Palettes/" + templateName + "/TilesM/tileMapM_" + i);
+        }
+
+
     }
 
 

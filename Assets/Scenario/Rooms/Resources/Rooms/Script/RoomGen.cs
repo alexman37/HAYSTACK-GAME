@@ -7,6 +7,7 @@ using System;
 public class RoomGen : MonoBehaviour
 {
     public static Tilemap tilemap;
+    public static Tilemap tilemapM;
     public static Map map;
     public static GameObject defaultSpr;
 
@@ -19,6 +20,7 @@ public class RoomGen : MonoBehaviour
         roomGenReady += dummyMethod;
         defaultSpr = GameObject.FindGameObjectWithTag("DefaultSpr");
         tilemap = GameObject.FindGameObjectWithTag("TilemapSt").GetComponent<Tilemap>();
+        tilemapM = GameObject.FindGameObjectWithTag("TilemapM").GetComponent<Tilemap>();
 
         Scenario.rosterCreationDone += initMap;
         roomGenReady.Invoke();

@@ -22,10 +22,20 @@ public class CursorObj : MonoBehaviour
         moveToNewRoom(start);
     }
 
+    //Clicked on a door, moving to new room
     void moveToNewRoom(Room dest)
     {
+        //Cleanup old room
+        if (currentRoom != null)
+        {
+            currentRoom.cleanupObjects();
+            currentRoom.drawOutline();
+        }
+
+        //Move into new room
         currentRoom = dest;
         this.gameObject.transform.position = currentRoom.focalPoint;
+        currentRoom.draw();
     }
 
     private void Update()
@@ -42,6 +52,7 @@ public class CursorObj : MonoBehaviour
         Vector2 vec = new Vector2Int();
         vec.x = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
         vec.y = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
+        Debug.Log(vec);
         return vec;
     }
 }

@@ -9,10 +9,11 @@ using System;
 public abstract class RoomObject {
     public Vector2Int pos;
     public PinpointBoundBox bbox;
+    public bool active = false;
 
     public virtual void interact()
     {
-        Debug.Log("No implementation given for this interactable object.");
+        if(active) Debug.Log("No implementation given for this interactable object.");
     }
 
     public RoomObject(Vector2Int pos, PinpointBoundBox bbox)
@@ -20,6 +21,10 @@ public abstract class RoomObject {
         this.pos = pos;
         this.bbox = bbox;
     }
+
+    public void activate() { active = true; }
+
+    public void deactivate() { active = false; }
 }
 
 //CHARACTERS
@@ -37,7 +42,10 @@ public class RoomObjCharacter : RoomObject
 
     public override void interact()
     {
-        Debug.Log("Talking to " + ch.getDisplayName(false));
+        if(active)
+        {
+            Debug.Log("Talking to " + ch.getDisplayName(false));
+        }
     }
 }
 
@@ -57,16 +65,20 @@ public class RoomObjDoor : RoomObject
 {
     public static event Action<Room> doorOpened;
 
-    public TileBase doorTile;
+    public int doorTile;
     public Room destinationRoom;
 
     public override void interact()
     {
-        Debug.Log("Opened a door");
-        doorOpened.Invoke(destinationRoom);
+        if (active)
+        {
+            Debug.Log("Opened a door");
+            doorOpened.Invoke(destinationRoom);
+        }
+        else Debug.Log("Refused to open door as it is inactive.");
     }
 
-    public RoomObjDoor(Vector2Int pos, TileBase tile, Room room, PinpointBoundBox bbox) : base(pos, bbox)
+    public RoomObjDoor(Vector2Int pos, int tile, Room room, PinpointBoundBox bbox) : base(pos, bbox)
     {
         doorTile = tile;
         this.destinationRoom = room;

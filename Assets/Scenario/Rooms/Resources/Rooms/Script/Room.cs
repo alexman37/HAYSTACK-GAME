@@ -6,6 +6,8 @@ using UnityEngine.Tilemaps;
 
 public class Room
 {
+    public static Map mapReference;
+
     //How many pixels is each tile?
     public static int tileDelta = 60;
 
@@ -24,6 +26,9 @@ public class Room
 
     //Used in camera logic.
     public Vector3 focalPoint;
+
+    //Used when deleting unused objects
+    private GameObject usedObjects = new GameObject();
 
     public Room(int id, string n, int t, List<Room> adj, List<RoomBoundBox> RoomBoundBoxes, int floorTile)
     {
@@ -54,6 +59,8 @@ public class Room
         );
     }
 
+
+    //You are in this room, so draw everything
     public void draw()
     {
         foreach(RoomBoundBox bb in boundaries)
@@ -62,24 +69,63 @@ public class Room
             {
                 for (int y = bb.bottomLeft.y; y < bb.topRight.y; y++)
                 {
-                    RoomGen.tilemap.SetTile(new Vector3Int(x, y, 0), bb.tile);
+                    RoomGen.tilemap.SetTile(new Vector3Int(x, y, 0), mapReference.template.allTiles[bb.tile]);
                 }
             }
         }
 
         foreach(RoomObject obj in objects)
         {
-            if(obj is RoomObjDoor door)
+            obj.activate();
+
+            if (obj is RoomObjDoor door)
             {
-                RoomGen.tilemap.SetTile(new Vector3Int(door.pos.x, door.pos.y, 0), door.doorTile);
+                RoomGen.tilemap.SetTile(new Vector3Int(door.pos.x, door.pos.y, 0), mapReference.template.allTiles[door.doorTile]);
             }
 
             else if (obj is RoomObjCharacter ch)
             {
                 GameObject g = GameObject.Instantiate(RoomGen.defaultSpr, new Vector3(ch.pos.x, ch.pos.y, 0), Quaternion.identity);
+                g.transform.parent = usedObjects.transform;
                 g.GetComponent<SpriteRenderer>().sprite = ch.sprite;
             }
         }
+    }
+
+    //You are not in this room, draw the floors in monochrome and skip all the objects
+    public void drawOutline()
+    {
+        foreach (RoomBoundBox bb in boundaries)
+        {
+            for (int x = bb.bottomLeft.x; x < bb.topRight.x; x++)
+            {
+                for (int y = bb.bottomLeft.y; y < bb.topRight.y; y++)
+                {
+                    //TODO: Monochrome "function" that just has grayed out versions of every tile. Maybe as a "copied" tileset?
+                    //So the indicies of each tile are the same, it's just the tiles that are different
+                    RoomGen.tilemap.SetTile(new Vector3Int(x, y, 0), mapReference.template.allTilesM[bb.tile]);
+                }
+            }
+        }
+
+        foreach (RoomObject obj in objects)
+        {
+            if (obj is RoomObjDoor door)
+            {
+                RoomGen.tilemap.SetTile(new Vector3Int(door.pos.x, door.pos.y, 0), mapReference.template.allTilesM[door.doorTile]);
+            }
+        }
+    }
+
+    //You have just left a room and want to remove the PHYSICAL objects from view.
+    public void cleanupObjects()
+    {
+        foreach(RoomObject obj in objects)
+        {
+            obj.deactivate();
+        }
+        GameObject.Destroy(usedObjects);
+        usedObjects = new GameObject();
     }
 
     //Is this an open tile in the room?
@@ -135,6 +181,12 @@ public class Room
     public override string ToString()
     {
         return "ROOM # " + id + " - " + roomName;
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj is Room) return (obj as Room).id == this.id;
+        else return false;
     }
 
     //used when randomly choosing locations for room objects
@@ -220,9 +272,9 @@ public class BoundBox
 public class RoomBoundBox : BoundBox
 {
     public bool walkable = true;
-    public TileBase tile;
+    public int tile;
 
-    public RoomBoundBox(Vector2Int bl, Vector2Int tr, TileBase t) : base(bl, tr)
+    public RoomBoundBox(Vector2Int bl, Vector2Int tr, int t) : base(bl, tr)
     {
         bottomLeft = bl;
         topRight = tr;
