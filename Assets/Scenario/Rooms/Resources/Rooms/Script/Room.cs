@@ -88,6 +88,7 @@ public class Room
                 GameObject g = GameObject.Instantiate(RoomGen.defaultSpr, new Vector3(ch.pos.x, ch.pos.y, 0), Quaternion.identity);
                 g.transform.parent = usedObjects.transform;
                 g.GetComponent<SpriteRenderer>().sprite = ch.sprite;
+                ch.physicalCounterpart = g;
             }
         }
     }
@@ -101,8 +102,7 @@ public class Room
             {
                 for (int y = bb.bottomLeft.y; y < bb.topRight.y; y++)
                 {
-                    //TODO: Monochrome "function" that just has grayed out versions of every tile. Maybe as a "copied" tileset?
-                    //So the indicies of each tile are the same, it's just the tiles that are different
+                    //Draw in monochrome
                     RoomGen.tilemap.SetTile(new Vector3Int(x, y, 0), mapReference.template.allTilesM[bb.tile]);
                 }
             }
@@ -123,6 +123,7 @@ public class Room
         foreach(RoomObject obj in objects)
         {
             obj.deactivate();
+            obj.physicalCounterpart = null;
         }
         GameObject.Destroy(usedObjects);
         usedObjects = new GameObject();

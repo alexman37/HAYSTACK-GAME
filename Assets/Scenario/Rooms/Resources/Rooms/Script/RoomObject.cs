@@ -10,6 +10,7 @@ public abstract class RoomObject {
     public Vector2Int pos;
     public PinpointBoundBox bbox;
     public bool active = false;
+    public GameObject physicalCounterpart;
 
     public virtual void interact()
     {
@@ -20,11 +21,17 @@ public abstract class RoomObject {
     {
         this.pos = pos;
         this.bbox = bbox;
+        physicalCounterpart = null;
     }
 
     public void activate() { active = true; }
 
     public void deactivate() { active = false; }
+
+    public virtual void onCharacterSelect(AgentCharacter charac)
+    {
+        Debug.Log("A character was selected, but no action is implemented for this room object");
+    }
 }
 
 //CHARACTERS
@@ -38,6 +45,8 @@ public class RoomObjCharacter : RoomObject
         this.ch = ch;
         this.pos = pos;
         sprite = spr;
+
+        UI_CharacterSlot.characterSelect += onCharacterSelect;
     }
 
     public override void interact()
@@ -46,6 +55,29 @@ public class RoomObjCharacter : RoomObject
         {
             Debug.Log("Talking to " + ch.getDisplayName(false));
         }
+    }
+
+    //Highlight a selected object
+    public void highlight(Color col)
+    {
+        if(active)
+        {
+            physicalCounterpart.GetComponent<SpriteRenderer>().color = col;
+            Debug.Log("Highlighting " + this);
+        }
+    }
+
+    public void removeHighlight()
+    {
+        if(active)
+        physicalCounterpart.GetComponent<SpriteRenderer>().color = Color.white;
+    }
+
+    //Detectives who talk can interact with characters
+    public override void onCharacterSelect(AgentCharacter det)
+    {
+        removeHighlight();
+        if(det.talks) highlight(det.color);
     }
 }
 
