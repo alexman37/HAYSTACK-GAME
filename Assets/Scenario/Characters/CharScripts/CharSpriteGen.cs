@@ -44,8 +44,22 @@ public static class CharSpriteGen
                 {
                     if(sgl.colsToFill != null) {
                         int index = sgl.colsToWatch.IndexOf(newcol);
-                        if (index >= 0) oldLayer.SetPixel(x, y, sgl.colsToFill[index]);
-                        else oldLayer.SetPixel(x, y, newcol);
+                        //THERE IS AN OFFSET
+                        if (sgl.offset.x != -99)
+                        {
+                            //AND IT FALLS WITHIN BOUNDS OF THE NEW IMAGE
+                            if (x + sgl.offset.x < w && x + sgl.offset.x > 0 && y + sgl.offset.y < h && y + sgl.offset.y > 0)
+                            {
+                                if (index >= 0) oldLayer.SetPixel(x + sgl.offset.x, y + sgl.offset.y, sgl.colsToFill[index]);
+                                else oldLayer.SetPixel(x + sgl.offset.x, y + sgl.offset.y, newcol);
+                            }
+                        }
+                        //THERE IS NO OFFSET
+                        else
+                        {
+                            if (index >= 0) oldLayer.SetPixel(x, y, sgl.colsToFill[index]);
+                            else oldLayer.SetPixel(x, y, newcol);
+                        }
                     }
                     else oldLayer.SetPixel(x, y, newcol);
                 }
@@ -112,6 +126,14 @@ public class SpriteGenLayer {
         this.colsToWatch = null;
         this.colsToFill = null;
         offset = (-99, -99);
+    }
+
+    public SpriteGenLayer(Sprite lay, (int x, int y) offset)
+    {
+        this.layer = lay;
+        this.colsToWatch = null;
+        this.colsToFill = null;
+        this.offset = offset;
     }
 
     public override string ToString()

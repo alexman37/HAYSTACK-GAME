@@ -16,11 +16,13 @@ public static class PawnGen
         Color[] colsOfBody = { ch.skinTone.color, Color.cyan, Color.gray };
         Sprite b = getRandomPawnResource("BodyTypes");
         Sprite h = getRandomPawnResource("HairTypes");
+        Sprite f = getRandomPawnResource("FaceTypes");
         SpriteGenLayer body = new SpriteGenLayer(b, CharSpriteGen.fromList(colsToReplace), CharSpriteGen.fromList(colsOfBody));
         SpriteGenLayer hair = new SpriteGenLayer(h, CharSpriteGen.oneList(Color.red), CharSpriteGen.oneList(ch.hairColor.color), 
             constantOffset(b.texture, h.texture, Color.white));
+        SpriteGenLayer face = new SpriteGenLayer(f, constantOffset(b.texture, f.texture, Color.magenta));
 
-        SpriteGenLayer[] newLayers = { body, hair };
+        SpriteGenLayer[] newLayers = { body, hair, face };
 
         Texture2D newTex = new Texture2D(120, 120);
         newTex = cleanCanvas(newTex);
@@ -62,10 +64,12 @@ public static class PawnGen
     {
         List<string> bodySprites = generatePawnSpriteList("BodyTypes");
         List<string> hairSprites = generatePawnSpriteList("HairTypes");
+        List<string> faceSprites = generatePawnSpriteList("FaceTypes");
 
         Dictionary<string, List<string>> spriteLists = new Dictionary<string, List<string>>();
         spriteLists.Add("BodyTypes", bodySprites);
         spriteLists.Add("HairTypes", hairSprites);
+        spriteLists.Add("FaceTypes", faceSprites);
         return spriteLists;
     }
 
