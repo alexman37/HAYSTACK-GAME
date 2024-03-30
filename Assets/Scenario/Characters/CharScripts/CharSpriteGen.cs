@@ -40,8 +40,7 @@ public static class CharSpriteGen
             for (int y = 0; y < oldLayer.height; y++)
             {
                 Color newcol = sgl.layer.texture.GetPixel(x, y);
-                if (newcol.a == 0 || x >= w || y >= h) ;//do nothing;
-                else
+                if (!(newcol.a == 0 || x >= w || y >= h))
                 {
                     if(sgl.colsToFill != null) {
                         int index = sgl.colsToWatch.IndexOf(newcol);
@@ -57,10 +56,27 @@ public static class CharSpriteGen
         return oldLayer;
     }
 
-    static List<Color> oneList(Color c)
+    /*private static void setWithOffset()
+    {
+        if (sgl.offset.x != -99)
+        {
+            if (x + sgl.offset.x < w && x + sgl.offset.x > 0 && y + sgl.offset.y < h && y + sgl.offset.y > 0)
+                oldLayer.SetPixel(x + sgl.offset.x, y + sgl.offset.y, newcol);
+        }
+        else oldLayer.SetPixel(x, y, newcol);
+    }*/
+
+    public static List<Color> oneList(Color c)
     {
         List<Color> cols = new List<Color>();
         cols.Add(c);
+        return cols;
+    }
+
+    public static List<Color> fromList(IEnumerable<Color> colors)
+    {
+        List<Color> cols = new List<Color>();
+        foreach (Color c in colors) cols.Add(c);
         return cols;
     }
 }
@@ -71,6 +87,7 @@ public class SpriteGenLayer {
     public Sprite layer;
     public List<Color> colsToWatch;
     public List<Color> colsToFill;
+    public (int x, int y) offset;
 
 
     public SpriteGenLayer(Sprite lay, List<Color> colsToWatch, List<Color> colsToFill)
@@ -78,6 +95,15 @@ public class SpriteGenLayer {
         this.layer = lay;
         this.colsToWatch = colsToWatch;
         this.colsToFill = colsToFill;
+        offset = (-99, -99);
+    }
+
+    public SpriteGenLayer(Sprite lay, List<Color> colsToWatch, List<Color> colsToFill, (int x, int y) offset)
+    {
+        this.layer = lay;
+        this.colsToWatch = colsToWatch;
+        this.colsToFill = colsToFill;
+        this.offset = offset;
     }
 
     public SpriteGenLayer(Sprite lay)
@@ -85,6 +111,7 @@ public class SpriteGenLayer {
         this.layer = lay;
         this.colsToWatch = null;
         this.colsToFill = null;
+        offset = (-99, -99);
     }
 
     public override string ToString()

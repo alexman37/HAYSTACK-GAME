@@ -40,6 +40,16 @@ public class RoomObjCharacter : RoomObject
     Character ch;
     public Sprite sprite;
 
+    //If no sprite is provided, generate one
+    public RoomObjCharacter(Character ch, Vector2Int pos, PinpointBoundBox bbox) : base(pos, bbox)
+    {
+        this.ch = ch;
+        this.pos = pos;
+        sprite = PawnGen.generatePawnFromChar(ch);
+
+        UI_CharacterSlot.characterSelect += onCharacterSelect;
+    }
+
     public RoomObjCharacter(Character ch, Sprite spr, Vector2Int pos, PinpointBoundBox bbox) : base(pos, bbox)
     {
         this.ch = ch;

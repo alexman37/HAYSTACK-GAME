@@ -86,14 +86,12 @@ public static class RoomGen_Train
 
     private static List<Room> randomlyAssignObjects(List<Room> rooms, Roster rost)
     {
-        Sprite pawn = Resources.Load<Sprite>("Rooms/Objects/pawn_ex_1");
-
         foreach(Character ch in rost.roster)
         {
             int roomIx = Random.Range(0, rooms.Count);
             Vector2Int pos = rooms[roomIx].getRandomPosition();
             PinpointBoundBox bb = new PinpointBoundBox(pos + new Vector2(-0.5f, -0.5f), pos + new Vector2(0.5f,0.5f));
-            rooms[roomIx].addObject(new RoomObjCharacter(ch, pawn, pos, bb));
+            rooms[roomIx].addObject(new RoomObjCharacter(ch, pos, bb));
         }
 
         return rooms;

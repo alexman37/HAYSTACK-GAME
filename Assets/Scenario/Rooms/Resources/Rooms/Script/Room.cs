@@ -85,7 +85,7 @@ public class Room
 
             else if (obj is RoomObjCharacter ch)
             {
-                GameObject g = GameObject.Instantiate(RoomGen.defaultSpr, new Vector3(ch.pos.x, ch.pos.y, 0), Quaternion.identity);
+                GameObject g = GameObject.Instantiate(RoomGen.defaultSpr, new Vector3(ch.pos.x - 0.5f, ch.pos.y - 0.5f, 0), Quaternion.identity);
                 g.transform.parent = usedObjects.transform;
                 g.GetComponent<SpriteRenderer>().sprite = ch.sprite;
                 ch.physicalCounterpart = g;
