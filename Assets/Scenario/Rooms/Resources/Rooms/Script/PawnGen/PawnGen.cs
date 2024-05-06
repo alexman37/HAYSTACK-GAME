@@ -20,9 +20,9 @@ public static class PawnGen
         SpriteGenLayer body = new SpriteGenLayer(b, CharSpriteGen.fromList(colsToReplace), CharSpriteGen.fromList(colsOfBody));
         SpriteGenLayer hair = new SpriteGenLayer(h, CharSpriteGen.oneList(Color.red), CharSpriteGen.oneList(ch.hairColor.color), 
             constantOffset(b.texture, h.texture, Color.white));
-        SpriteGenLayer face = new SpriteGenLayer(f, constantOffset(b.texture, f.texture, Color.magenta));
+        //SpriteGenLayer face = new SpriteGenLayer(f, constantOffset(b.texture, f.texture, Color.magenta));
 
-        SpriteGenLayer[] newLayers = { body, hair, face };
+        SpriteGenLayer[] newLayers = { body, hair/*, face*/ };
 
         Texture2D newTex = new Texture2D(120, 120);
         newTex = cleanCanvas(newTex);

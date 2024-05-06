@@ -49,10 +49,13 @@ public class CursorObj : MonoBehaviour
 
     private Vector2 mouseToGrid()
     {
-        Vector2 vec = new Vector2Int();
-        vec.x = Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
-        vec.y = Camera.main.ScreenToWorldPoint(Input.mousePosition).y;
+        Vector3 vec = new Vector3();
+        vec = Input.mousePosition;
+        vec.z = 10f;
+        Debug.Log("True position: " + Input.mousePosition);
+        vec = Camera.main.ScreenToWorldPoint(vec);
+        //Debug.Log(Input.mousePosition);
         Debug.Log(vec);
-        return vec;
+        return new Vector2(vec.x, vec.y);
     }
 }
